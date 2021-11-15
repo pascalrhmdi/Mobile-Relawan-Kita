@@ -1,9 +1,6 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, FC, useReducer } from "react";
 
 interface AuthContextInterface {
-  // Toasting
-  isToast: boolean,
-  description: String,
   // LoginAuth
   isLoggedIn: boolean,
   // Loading
@@ -11,35 +8,49 @@ interface AuthContextInterface {
 }
 
 const initialState: AuthContextInterface = {
-	isToast: false,
-  description: "",
   isLoggedIn: false,
   loading: false
 };
 
-const authReducer = (state: AuthContextInterface, action: {type: unknown}) => {
+enum ActionType {
+  SET_LOADING = 'set_loading',
+  SET_LOGGED_IN = 'set_logged_in',
+}
+
+type Action =
+  | {type: ActionType.SET_LOADING; payload: boolean }
+  | {
+      type: ActionType.SET_LOGGED_IN;
+      payload: boolean;
+    }
+
+const authReducer = (state: AuthContextInterface, action: Action): AuthContextInterface => {
 	switch (action.type) {
-		// Payload Set User : tipe object 
-		// case ACTION_TYPES.SET_LOADING:
-		// 	return {
-		// 		...state,
-		// 		loading: action.payload,
-		// 	};
+    case "set_logged_in":
+			return {
+				...state,
+				isLoggedIn: action.payload,
+			};
+    case "set_loading":
+      return {
+        ...state,
+        loading: action.payload
+      }
 		default:
 			return state;
 	}
 };
 
-const AuthContext = createContext<AuthContextInterface | null>(initialState);
+const AuthContext = createContext<{state: AuthContextInterface; dispatch: React.Dispatch<any>;}>
+({state: initialState,
+  dispatch: () => null
+});
 
-type Props= {
-  children?: JSX.Element | JSX.Element[];
-}
-const AuthProvider = ({ children }: Props) => {
+const AuthProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   return(
-    <AuthContext.Provider value={ state }>
+    <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   )

@@ -2,9 +2,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeBaseProvider } from 'native-base';
 import React, { useContext } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AuthProvider, { AuthContext } from "./src/contexts/AuthContext";
 import { AccountScreen, ChooseLoginRegisterScreen, LoginScreen, RegisterScreen } from './src/screens';
+import customTheme from './theme';
 
 const Root = createNativeStackNavigator()
 const AuthenticationScreens = () => (
@@ -14,17 +14,23 @@ const AuthenticationScreens = () => (
     <Root.Screen name="Register" component={RegisterScreen}/>
   </>
 )
-const pascal = 1;
+
 const App = () => {
-  const state = useContext(AuthContext);
+  const {state} = useContext(AuthContext);
   
   return (
     <NavigationContainer>
+      <Root.Navigator 
+        screenOptions={{
+          headerShown: false
+        }}
+      >
       {state?.isLoggedIn ? (
         <Root.Screen name="Account" component={AccountScreen}/>
       ): ( 
         AuthenticationScreens()
       )}
+      </Root.Navigator>
     </NavigationContainer>
   );
 }
@@ -32,11 +38,9 @@ const App = () => {
 
 export default () => {
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={customTheme}>
       <AuthProvider>
-        <SafeAreaProvider>
-          <App />
-        </SafeAreaProvider>
+            <App />
       </AuthProvider>
     </NativeBaseProvider>
   )
