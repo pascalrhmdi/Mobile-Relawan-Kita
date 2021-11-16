@@ -5,6 +5,7 @@ import { Box, Button, FormControl, Heading, HStack, Icon, Input, Radio, ScrollVi
 import React, { useContext, useEffect, useState } from 'react'
 import { FormDataRegisterInterface } from '.'
 import { registerUrl } from '../../apis'
+import { BulanLibFromDate } from '../../constants/bulanLib.const'
 import { daftarValidate } from '../../constants/formValidation.const'
 import { AuthContext } from '../../contexts/AuthContext'
 import { DismissKeyboard } from '../../HOCs'
@@ -228,7 +229,10 @@ const RegisterScreen = ({ navigation }) => {
               </FormControl.Label>
               <Input 
                 showSoftInputOnFocus={false}
-                value={formData.tanggal_lahir} 
+                value={`${BulanLibFromDate(
+									formData.tanggal_lahir,
+									false
+								)}`} 
                 onPressIn={() => setShowDate(true)}
                 onChangeText={(value) => handleInputChange(value, 'tanggal_lahir')}
                 InputRightElement={
