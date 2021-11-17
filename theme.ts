@@ -49,6 +49,11 @@ const customTheme = extendTheme({
       baseStyle: {
         alignSelf: "flex-end"
       }
+    },
+    Toast: {
+      defaultProps: {
+        duration: 3000
+      }
     }
   },
 });
