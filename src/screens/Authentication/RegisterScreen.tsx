@@ -3,8 +3,9 @@ import RNDateTimePicker from '@react-native-community/datetimepicker'
 import axios from 'axios'
 import { Box, Button, FormControl, Heading, HStack, Icon, Input, Radio, ScrollView, Text, TextArea, useToast, VStack } from 'native-base'
 import React, { useContext, useEffect, useState } from 'react'
-import { FormDataRegisterInterface } from '.'
+import { FormDataRegisterInterface, UserResponseInterface } from '.'
 import { registerUrl } from '../../apis'
+import { storeStorageData } from '../../constants/asyncStorage.const'
 import { BulanLibFromDate } from '../../constants/bulanLib.const'
 import { daftarValidate } from '../../constants/formValidation.const'
 import { AuthContext } from '../../contexts/AuthContext'
@@ -50,13 +51,18 @@ const RegisterScreen = ({ navigation }) => {
   async function daftar(formData: FormDataRegisterInterface) {
     dispatch({type: "set_loading", payload: true})
     try {
-      const {data}  = (await axios.post(registerUrl, formData));
+      const data: UserResponseInterface  = (await axios.post(registerUrl, formData)).data;
       
       toast.show({
         title: data.message,
         status: "success",
       })
       dispatch({type: "set_loading", payload: false})
+      dispatch({type: "set_user_data", payload: data.data})
+      storeStorageData('id_pengguna', data.data.id_pengguna)
+      // Ini akan otomatis pindah ke halaman selanjutnya
+      // yakni halaman pertama di logika !isLoggedIn
+      dispatch({type: "set_logged_in", payload: true})
     } catch (e) { 
       toast.show({
         title: "Register Gagal",

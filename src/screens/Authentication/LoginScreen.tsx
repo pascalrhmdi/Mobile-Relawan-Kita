@@ -1,9 +1,11 @@
 import { MaterialIcons } from '@expo/vector-icons'
+import axios from 'axios'
 import { Box, Button, FormControl, Heading, HStack, Icon, Input, Text, useToast, VStack } from 'native-base'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { FormDataLoginInterface } from '.'
+import { FormDataLoginInterface, UserResponseInterface } from '.'
 import { loginUrl } from '../../apis'
 import { loginValidate } from '../../constants'
+import { storeStorageData } from '../../constants/asyncStorage.const'
 import { AuthContext } from '../../contexts/AuthContext'
 import { DismissKeyboard } from '../../HOCs'
 
@@ -20,7 +22,7 @@ const LoginScreen: FC = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
-    dispatch({type: "set_loading", payload: false});
+    dispatch({type: 'set_loading', payload: false} );
   }, [])
 
   function handlePasswordIcon(): void {
@@ -33,33 +35,26 @@ const LoginScreen: FC = ({ navigation }) => {
   
   async function login(formData: FormDataLoginInterface) {
     dispatch({type: "set_loading", payload: true})
-
-    const config = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    }
-
     try {
-      console.log(loginUrl)
-      // const {data}  = (await axios.post(loginUrl, formData));
-      const data = (await fetch(loginUrl, config)).json();
-      
-      console.log(data);
+      const data: UserResponseInterface = (await axios.post(loginUrl, formData)).data;
       
       toast.show({
         title: data.message,
         status: "success",
       })
       dispatch({type: "set_loading", payload: false})
+      dispatch({type: "set_user_data", payload: data.data})
+      storeStorageData('id_pengguna', data.data.id_pengguna)
+      
+      // Ini akan otomatis pindah ke halaman selanjutnya
+      // yakni halaman pertama di logika !isLoggedIn
+      dispatch({type: "set_logged_in", payload: true})
     } catch (e) { 
       toast.show({
         title: "Login Gagal",
         size: '0.5',
         status: "danger",
-        description: e.message,
+        description: e.response.message,
       })
       dispatch({type: "set_loading", payload: false})
     }
@@ -122,6 +117,7 @@ const LoginScreen: FC = ({ navigation }) => {
               value={formData.password}
               onChangeText={(value) => handleInputChange(value, 'password' )}
               type={showPassword ? "text" : "password"}
+              autoCapitalize="none"
               placeholder="********"
               InputRightElement={
                 <Button size="xs" mr={2} onPress={handlePasswordIcon} bgColor="transparent" p={2}>
