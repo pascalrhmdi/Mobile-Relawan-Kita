@@ -1,27 +1,31 @@
 import React, { createContext, FC, useReducer } from "react";
+import { UserDataInterface } from "../../screens";
 
-interface AuthContextInterface {
+interface AuthContextInterface extends UserDataInterface {
   // LoginAuth
   isLoggedIn: boolean,
   // Loading
-  loading: boolean,
+  loading: boolean
 }
 
-const initialState: AuthContextInterface = {
+const initialState: AuthContextInterface = {                         
   isLoggedIn: false,
-  loading: false
+  loading: false,
+  id_pengguna: "",
+  role: "",
+  nama: "",
+  jenis_kelamin: "Laki-laki",
+  alamat: "",
+  nomor_telepon: "",
+  tanggal_lahir: Date()
 };
 
-enum ActionType {
-  SET_LOADING = 'set_loading',
-  SET_LOGGED_IN = 'set_logged_in',
-}
-
 type Action =
-  | {type: ActionType.SET_LOADING; payload: boolean }
+    {type: 'set_loading'; payload: boolean }
+  | {type: 'set_logged_in'; payload: boolean }
   | {
-      type: ActionType.SET_LOGGED_IN;
-      payload: boolean;
+      type:  'set_user_data';
+      payload: UserDataInterface;
     }
 
 const authReducer = (state: AuthContextInterface, action: Action): AuthContextInterface => {
@@ -35,13 +39,18 @@ const authReducer = (state: AuthContextInterface, action: Action): AuthContextIn
       return {
         ...state,
         loading: action.payload
+      };
+    case 'set_user_data':
+      return {
+        ...state,
+        ...action.payload
       }
 		default:
 			return state;
 	}
 };
 
-const AuthContext = createContext<{state: AuthContextInterface; dispatch: React.Dispatch<any>;}>
+const AuthContext = createContext<{state: AuthContextInterface; dispatch: React.Dispatch<Action>;}>
 ({state: initialState,
   dispatch: () => null
 });

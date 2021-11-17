@@ -13,18 +13,21 @@ interface FormDataRegisterInterface extends FormDataLoginInterface {
   jenis_kelamin: "Laki-laki" | "Perempuan"
   tanggal_lahir: string
 }
+
+interface UserDataInterface  {
+  id_pengguna: string,
+  role: "" | "volunteer",
+  nama: string,
+  alamat: string,
+  nomor_telepon: string,
+  jenis_kelamin: string,
+  tanggal_lahir: string
+}
+
 interface UserResponseInterface {
   status: number,
   message: string,
-  data: {
-    id_pengguna: string,
-    role: "volunteer",
-    nama: string,
-    alamat: string,
-    nomor_telepon: string,
-    jenis_kelamin: string,
-    tanggal_lahir: string
-  }
+  data: UserDataInterface
 }
 
 export {
@@ -33,6 +36,7 @@ export {
   RegisterScreen,
   FormDataLoginInterface,
   FormDataRegisterInterface,
-  UserResponseInterface
+  UserResponseInterface,
+  UserDataInterface
 };
 
