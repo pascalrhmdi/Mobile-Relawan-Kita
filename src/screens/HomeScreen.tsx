@@ -10,7 +10,7 @@ import {
   Text,
   Pressable,
 } from "native-base";
-import { volunteerMainUrl, allActivityCategoryUrl } from "../apis";
+import { activityMainUrl, allActivityCategoryUrl } from "../apis";
 import { ActivityCard, CategoryBox, SearchBar } from "../components";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFetchGet } from "../Hooks";
@@ -22,7 +22,7 @@ const HomeScreen: FC = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   let categoryData = useFetchGet(allActivityCategoryUrl, refreshing);
   let activityData = useFetchGet(
-    `${volunteerMainUrl}?start=0&amount=6`,
+    `${activityMainUrl}?start=0&amount=6`,
     refreshing
   );
   let [userData,setUserData] = useState({id_pengguna:"",nama:"Relawan"} as UserDataInterface);
