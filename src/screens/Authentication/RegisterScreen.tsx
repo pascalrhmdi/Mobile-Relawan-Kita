@@ -1,10 +1,11 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 import axios from 'axios'
-import { Box, Button, FormControl, Heading, HStack, Icon, Input, Radio, ScrollView, Text, TextArea, useToast, VStack } from 'native-base'
+import { Button, FormControl, Heading, HStack, Icon, Input, Radio, ScrollView, Text, TextArea, useToast, VStack } from 'native-base'
 import React, { useContext, useEffect, useState } from 'react'
 import { FormDataRegisterInterface, UserResponseInterface } from '.'
 import { registerUrl } from '../../apis'
+import { WithTopNavigation } from '../../components/NavigationApp'
 import { storeStorageData } from '../../constants/asyncStorage.const'
 import { BulanLibFromDate } from '../../constants/bulanLib.const'
 import { daftarValidate } from '../../constants/formValidation.const'
@@ -92,8 +93,8 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <DismissKeyboard>
       <ScrollView alwaysBounceVertical showsVerticalScrollIndicator={false}>
-        <Box safeArea flex={1} py="8" px="4" bgColor="rose.50">
-          <Heading>
+        <WithTopNavigation name="Register" safeArea>
+          <Heading color="red.600">
             Selamat Datang,
           </Heading>
           <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
@@ -292,7 +293,7 @@ const RegisterScreen = ({ navigation }) => {
               </Button>
             </HStack>
           </VStack>
-        </Box>
+        </WithTopNavigation>
       </ScrollView>
     </DismissKeyboard>
   )

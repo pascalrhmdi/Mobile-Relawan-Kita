@@ -1,9 +1,10 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import axios from 'axios'
-import { Box, Button, FormControl, Heading, HStack, Icon, Input, Text, useToast, VStack } from 'native-base'
+import { Button, FormControl, Heading, HStack, Icon, Input, Text, useToast, VStack } from 'native-base'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { FormDataLoginInterface, UserResponseInterface, UserDataInterface } from '.'
+import { FormDataLoginInterface, UserDataInterface, UserResponseInterface } from '.'
 import { loginUrl } from '../../apis'
+import { WithTopNavigation } from '../../components/NavigationApp'
 import { loginValidate } from '../../constants'
 import { storeStorageData } from '../../constants/asyncStorage.const'
 import { AuthContext } from '../../contexts/AuthContext'
@@ -14,7 +15,7 @@ const initialState: FormDataLoginInterface = {
   password: ''
 }
 
-const LoginScreen: FC = ({ navigation }) => {
+const LoginScreen: FC = ({ navigation }: NativeStackNavigationProp) => {
   const {state, dispatch} = useContext(AuthContext)
   const toast = useToast()
   const [formData, setFormData] = useState(initialState)
@@ -78,8 +79,8 @@ const LoginScreen: FC = ({ navigation }) => {
 
   return (
     <DismissKeyboard>
-      <Box safeArea flex={1} py="8" px="4" bgColor="rose.50">
-        <Heading>
+      <WithTopNavigation name="Login" safeArea>
+        <Heading color="red.600">
           Selamat Datang Kembali,
         </Heading>
         <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
@@ -164,7 +165,7 @@ const LoginScreen: FC = ({ navigation }) => {
             </Button>
           </HStack>
         </VStack>
-    </Box>
+      </WithTopNavigation>
     </DismissKeyboard>
   )
 }
