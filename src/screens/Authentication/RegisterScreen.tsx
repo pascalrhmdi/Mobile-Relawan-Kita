@@ -51,7 +51,7 @@ const RegisterScreen = ({ navigation }) => {
   async function daftar(formData: FormDataRegisterInterface) {
     dispatch({type: "set_loading", payload: true})
     try {
-      const data: UserResponseInterface  = (await axios.post(registerUrl, formData)).data;
+      const data: UserResponseInterface  = (await axios.post(registerUrl, JSON.stringify(formData))).data;
       
       toast.show({
         title: data.message,
@@ -59,7 +59,8 @@ const RegisterScreen = ({ navigation }) => {
       })
       dispatch({type: "set_loading", payload: false})
       dispatch({type: "set_user_data", payload: data.data})
-      storeStorageData('id_pengguna', data.data.id_pengguna)
+      const {id_pengguna,nama,role} = data.data;
+      storeStorageData('user_data', {id_pengguna,nama,role});
       // Ini akan otomatis pindah ke halaman selanjutnya
       // yakni halaman pertama di logika !isLoggedIn
       dispatch({type: "set_logged_in", payload: true})
