@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import axios from 'axios'
 import { Box, Button, FormControl, Heading, HStack, Icon, Input, Text, useToast, VStack } from 'native-base'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { FormDataLoginInterface, UserResponseInterface } from '.'
+import { FormDataLoginInterface, UserResponseInterface, UserDataInterface } from '.'
 import { loginUrl } from '../../apis'
 import { loginValidate } from '../../constants'
 import { storeStorageData } from '../../constants/asyncStorage.const'
@@ -36,7 +36,7 @@ const LoginScreen: FC = ({ navigation }) => {
   async function login(formData: FormDataLoginInterface) {
     dispatch({type: "set_loading", payload: true})
     try {
-      const data: UserResponseInterface = (await axios.post(loginUrl, formData)).data;
+      const data: UserResponseInterface = (await axios.post(loginUrl, JSON.stringify(formData))).data;
       
       toast.show({
         title: data.message,
@@ -44,7 +44,8 @@ const LoginScreen: FC = ({ navigation }) => {
       })
       dispatch({type: "set_loading", payload: false})
       dispatch({type: "set_user_data", payload: data.data})
-      storeStorageData('id_pengguna', data.data.id_pengguna)
+      const {id_pengguna,nama,role}:UserDataInterface = data.data;
+      storeStorageData('user_data', {id_pengguna,nama,role});
       
       // Ini akan otomatis pindah ke halaman selanjutnya
       // yakni halaman pertama di logika !isLoggedIn

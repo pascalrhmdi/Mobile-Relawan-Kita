@@ -14,7 +14,7 @@ const initialState: AuthContextInterface = {
   id_pengguna: "",
   role: "",
   nama: "",
-  jenis_kelamin: "Laki-laki",
+  jenis_kelamin: "",
   alamat: "",
   nomor_telepon: "",
   tanggal_lahir: Date()

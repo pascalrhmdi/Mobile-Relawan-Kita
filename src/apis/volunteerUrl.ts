@@ -1,5 +1,6 @@
+import Constants from 'expo-constants';
 
-const volunteerMainUrl: string = "http://192.168.1.7/RelawanKita/api/volunteer";
+const volunteerMainUrl: string = `${Constants.manifest?.extra?.apiBaseUrl}/api/volunteer`;
 
 const loginUrl: string = `${volunteerMainUrl}/login`;
 const registerUrl: string = `${volunteerMainUrl}/register`;
