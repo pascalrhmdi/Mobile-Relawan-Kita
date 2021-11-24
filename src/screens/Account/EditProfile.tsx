@@ -1,39 +1,34 @@
-import { MaterialIcons } from '@expo/vector-icons'
 import axios from 'axios'
-import { Button, FormControl, Heading, HStack, Icon, Input, Radio, ScrollView, Text, TextArea, useToast, VStack } from 'native-base'
+import { Button, FormControl, Heading, Input, Radio, ScrollView, TextArea, useToast, VStack } from 'native-base'
 import React, { useContext, useState } from 'react'
-import { FormDataRegisterInterface, UserResponseInterface } from '.'
-import { registerUrl } from '../../apis'
+import { FormDataEditProfileInterface } from '.'
+import { FormDataRegisterInterface, UserDataInterface, UserResponseInterface } from '..'
+import { profileUrl } from '../../apis'
 import { InputDateApp } from '../../components/InputApp'
 import { WithTopNavigation } from '../../components/NavigationApp'
-import { storeStorageData } from '../../constants/asyncStorage.const'
-import { daftarValidate } from '../../constants/formValidation.const'
+import { EditProfileValidate } from '../../constants/formValidation.const'
 import { AuthContext } from '../../contexts/AuthContext'
 import { DismissKeyboard } from '../../HOCs'
 
-const initialState: FormDataRegisterInterface = {
-  email: '',
-  password: '',
-  nama: '',
-  alamat: '',
-  nomor_telepon: '',
-  jenis_kelamin: "Laki-laki",
-  // return hari ini YYYY-MM-DD
-  tanggal_lahir: new Date().toISOString().substring(0,10)
+interface EditProfileResponseInterface extends Omit<UserResponseInterface, "data"> {
+  data: Omit<UserDataInterface, "role" | "email">
 }
 
-const RegisterScreen = ({ navigation }) => {
+const EditProfile = ({ navigation }) => {
   const {state, dispatch} = useContext(AuthContext)
+  const initialState: FormDataEditProfileInterface = {
+    nama: state.nama,
+    jenis_kelamin: state.jenis_kelamin,
+    alamat: state.alamat,
+    nomor_telepon: state.nomor_telepon,
+    tanggal_lahir: state.tanggal_lahir
+  }
+
   const toast = useToast()
   const [formData, setFormData] = useState(initialState)
-  const [errors, setErrors] = useState({} as FormDataRegisterInterface);
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState({} as FormDataEditProfileInterface);
   const [showDate, setShowDate] = useState(false)
-
-  function handlePasswordIcon(): void {
-    setShowPassword((prevValue) => !prevValue)
-  }
+  const [isLoading, setIsLoading] = useState(false)
   
   function handleInputChange(value: string, fieldName: string): void {
     setFormData({ ...formData, [fieldName]: value})
@@ -45,25 +40,23 @@ const RegisterScreen = ({ navigation }) => {
     handleInputChange(currentDate, 'tanggal_lahir');
   };
 
-  async function daftar(formData: FormDataRegisterInterface) {
+  async function ubahProfile(formData: FormDataRegisterInterface) {
     setIsLoading((prev) => !prev)
     try {
-      const data: UserResponseInterface  = (await axios.post(registerUrl, JSON.stringify(formData))).data;
-      
+      const data: EditProfileResponseInterface  = (await axios.put(`${profileUrl}/${state.id_pengguna}`, JSON.stringify(formData))).data;
       
       dispatch({type: "set_user_data", payload: data.data})
-      const {id_pengguna,nama,role} = data.data;
-      storeStorageData('user_data', {id_pengguna,nama,role});
+
       toast.show({
         title: data.message,
         status: "success",
       })
       // Ini akan otomatis pindah ke halaman selanjutnya
       // yakni halaman pertama di logika !isLoggedIn
-      dispatch({type: "set_logged_in", payload: true})
-    } catch (e) { 
+      navigation.navigate('Home')
+    } catch (e) {
       toast.show({
-        title: "Register Gagal",
+        title: "Edit Profil Gagal",
         size: '0.5',
         status: "danger",
         description: e.response.data.message,
@@ -74,12 +67,12 @@ const RegisterScreen = ({ navigation }) => {
   }
 
   function handleSubmit():void {
-    const isValid = daftarValidate(formData);
+    const isValid = EditProfileValidate(formData);
     
     // Jika hasilnya object kosong, ini akan dieksekusi
     // kosongin
     if (Object.keys(isValid).length === 0 && Object.getPrototypeOf(isValid) === Object.prototype) {
-      daftar(formData)
+      ubahProfile(formData)
       setErrors({});
     } 
     // Jika ada error, ganti errornya jadi hasil isValid
@@ -87,19 +80,16 @@ const RegisterScreen = ({ navigation }) => {
       setErrors( () => ({...isValid}))
     }
   }
+
   return (
     <DismissKeyboard>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <WithTopNavigation name="Register" bgColor="red.50">
+        <WithTopNavigation name="Register" bgColor="light.50">
           <Heading color="red.600">
-            Selamat Datang,
+            Edit Profil,
           </Heading>
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Daftar untuk lanjut!
-          </Heading>
-
-          <VStack space={3} mt="5">
-            <FormControl isRequired isInvalid={'email' in errors}>
+          <VStack space={2} mt="5">
+            <FormControl isRequired isDisabled>
               <FormControl.Label>
                 Email
               </FormControl.Label>
@@ -107,48 +97,7 @@ const RegisterScreen = ({ navigation }) => {
                 textContentType="emailAddress"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                value={formData.email} 
-                placeholder="johndoe@gmail.com" 
-                onChangeText={(value) => handleInputChange(value, 'email')} />
-              {'email' in errors
-                  ?
-                    <FormControl.ErrorMessage>
-                      {errors.email}
-                    </FormControl.ErrorMessage>
-                  : 
-                    <FormControl.HelperText>
-                      Email harus valid
-                    </FormControl.HelperText>
-              }
-            </FormControl>
-            <FormControl isRequired isInvalid={'password' in errors}>
-              <FormControl.Label>
-                Kata Sandi
-              </FormControl.Label>
-              <Input 
-                value={formData.password}
-                type={showPassword ? "text" : "password"}
-                placeholder="********"
-                InputRightElement={
-                  <Button size="xs" mr={2} onPress={handlePasswordIcon} bgColor="transparent" p={2}>
-                    <Icon
-                      as={<MaterialIcons name={showPassword ? "visibility-off" : "visibility"} />}
-                      size={5}
-                    />
-                  </Button>
-                }
-                onChangeText={(value) => handleInputChange(value, 'password')} 
-              />
-              {'password' in errors 
-                  ?
-                    <FormControl.ErrorMessage>
-                      {errors.password}
-                    </FormControl.ErrorMessage>
-                  : 
-                    <FormControl.HelperText>
-                      Password harus lebih dari 6 karakter
-                    </FormControl.HelperText>
-              }
+                value={state.email} />
             </FormControl>
             <FormControl isRequired isInvalid={'nama' in errors}>
               <FormControl.Label>
@@ -240,25 +189,8 @@ const RegisterScreen = ({ navigation }) => {
               helperText="Sesuai KTP"
             />
             <Button variant="RK_solidRed" shadow={0} onPress={handleSubmit} isLoading={isLoading}>
-              Daftar
+              SIMPAN
             </Button>
-            <HStack mt="6" justifyContent="center">
-              <Text fontSize="sm" color="muted.700" fontWeight={400}>
-                Sudah punya akun?{' '}
-              </Text>
-              <Button
-                variant="ghost"
-                p={0}
-                m={0}
-                _text={{
-                  color: 'red.600',
-                  fontWeight: 'medium',
-                  fontSize: 'sm',
-                }}
-                onPress={() => navigation.navigate('Login')}>
-                Masuk!
-              </Button>
-            </HStack>
           </VStack>
         </WithTopNavigation>
       </ScrollView>
@@ -266,4 +198,4 @@ const RegisterScreen = ({ navigation }) => {
   )
 }
 
-export default RegisterScreen
+export default EditProfile

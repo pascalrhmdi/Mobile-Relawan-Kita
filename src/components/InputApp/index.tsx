@@ -1,13 +1,5 @@
-import { FC } from 'react'
+import InputDateApp from './InputDate'
 
-type Props = {
-  
+export {
+  InputDateApp
 }
-
-const InputApp: FC = (props: Props) => {
-  return (
-
-  )
-}
-
-export default InputApp
