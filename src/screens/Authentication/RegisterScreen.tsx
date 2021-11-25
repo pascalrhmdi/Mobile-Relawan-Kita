@@ -60,8 +60,7 @@ const RegisterScreen = ({ navigation }) => {
       })
       dispatch({type: "set_loading", payload: false})
       dispatch({type: "set_user_data", payload: data.data})
-      const {id_pengguna,nama,role} = data.data;
-      storeStorageData('user_data', {id_pengguna,nama,role});
+      storeStorageData('id_pengguna', data.data.id_pengguna)
       // Ini akan otomatis pindah ke halaman selanjutnya
       // yakni halaman pertama di logika !isLoggedIn
       dispatch({type: "set_logged_in", payload: true})
@@ -70,7 +69,7 @@ const RegisterScreen = ({ navigation }) => {
         title: "Register Gagal",
         size: '0.5',
         status: "danger",
-        description: e.message,
+        description: e.response.data.message,
       })
       dispatch({type: "set_loading", payload: false})
     }

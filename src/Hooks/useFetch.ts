@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { ApiResponse, ApiPostResponse } from ".";
 
 const initialState: ApiResponse = {
-  items: [],
+  data: [],
   isLoading: true,
   error: false,
 };
@@ -14,17 +14,20 @@ const postInitialState: ApiPostResponse = {
 };
 
 const useFetchGet = (url: string, refreshing: boolean) => {
+  const abortController = new AbortController();
   const [data, setData] = useState<ApiResponse>(initialState);
+  
   useEffect(() => {
-    axios
-      .get(url)
+    axios.get(url,{signal: abortController.signal})
       .then((response) => {
-        setData({ items: response.data.data, isLoading: false, error: false });
+        setData({ data: response.data.data, isLoading: false, error: false });
       })
       .catch((err) => {
-        setData({ items: [], isLoading: false, error: err.message });
+        setData({ data: [], isLoading: false, error: err.message });
       });
-  }, [refreshing]);
+
+      return () => abortController.abort();
+  }, [url, refreshing]);
 
   return { ...data };
 };
@@ -37,7 +40,7 @@ const useFetchPost = (url: string, body: object, refreshing: boolean) => {
       .post(url, JSON.stringify(body))
       .then((response) => {
         setData({
-          items: response.data.data,
+          data: response.data.data,
           message: response.data.message,
           isLoading: false,
           error: false,
@@ -45,7 +48,7 @@ const useFetchPost = (url: string, body: object, refreshing: boolean) => {
       })
       .catch((err) => {
         setData({
-          items: [],
+          data: [],
           message: "Error! Something went wrong",
           isLoading: false,
           error: err.message,

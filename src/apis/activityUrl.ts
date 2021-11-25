@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
-
-const activityMainUrl: string = `${Constants.manifest?.extra?.apiBaseUrl}/api/activity`;
+// https://cors-anywhere.herokuapp.com/
+const activityMainUrl: string = `https://cors-anywhere.herokuapp.com/${Constants.manifest?.extra?.apiBaseUrl}/api/activity`;
 
 const registerAnActivityUrl: string = `${activityMainUrl}/register`;
 const searchActivityUrl: string = `${activityMainUrl}/search`;

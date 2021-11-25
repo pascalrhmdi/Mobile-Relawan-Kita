@@ -1,34 +1,45 @@
+import 'react-native-gesture-handler';
+import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NativeBaseProvider } from "native-base";
-import React, { useContext } from "react";
+import { createStackNavigator } from '@react-navigation/stack';
+import { NativeBaseProvider, Pressable } from "native-base";
+import React, { useContext, useEffect, useState } from "react";
 import AuthProvider, { AuthContext } from "./src/contexts/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   AccountScreen,
   ChooseLoginRegisterScreen,
   LoginScreen,
   RegisterScreen,
   HomeScreen,
+  ActivityScreen,
+  SearchScreen,
+  DetailActivityScreen,
+  CategoryScreen,
+  VolunteerHistory
 } from "./src/screens";
 import customTheme from "./theme";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from 'axios';
+import {profileUrl} from "./src/apis/";
+import { UserResponseInterface } from './src/screens/Authentication';
 
-const Root = createNativeStackNavigator();
+const Stack = createStackNavigator();
 const AuthenticationScreens = () => (
   <>
-    <Root.Screen
+    <Stack.Screen
       name="ChooseLoginRegister"
       component={ChooseLoginRegisterScreen}
     />
-    <Root.Screen name="Login" component={LoginScreen} />
-    <Root.Screen name="Register" component={RegisterScreen} />
+    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="Register" component={RegisterScreen} />
   </>
 );
 
 const Tab = createBottomTabNavigator();
-const TabNavigation = () => {
+const TabNavigation = ({navigation}) => {
   const iconSize = 28;
   return (
     <Tab.Navigator
@@ -51,17 +62,22 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="Aktivitas"
-        component={HomeScreen}
+        component={ActivityScreen}
         options={{
-          headerShown: false,
+          headerTintColor: '#DF202E',
           tabBarIcon: ({focused, color }) => (
             <MaterialCommunityIcons name={focused?'account-multiple':'account-multiple-outline'} color={color} size={iconSize} />
+          ),
+          headerRight: () => (
+            <Pressable style={{ marginRight:20 }} onPress={()=>navigation.navigate("SearchScreen")}>
+              <MaterialCommunityIcons name="magnify" color="#DF202E" size={iconSize} />
+            </Pressable>
           ),
         }}
       />
       <Tab.Screen
         name="Profil"
-        component={HomeScreen}
+        component={VolunteerHistory}
         options={{
           headerShown: false,
           tabBarIcon: ({focused, color }) => (
@@ -74,20 +90,53 @@ const TabNavigation = () => {
 };
 
 const App = () => {
-  const { state } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
+
+  useEffect(() => {
+    dispatch({type:'set_loading',payload:true});
+
+    (async()=>{
+      try {
+        // Keep the splash screen visible while we fetch resources
+        await SplashScreen.preventAutoHideAsync();
+        // make any API calls
+        let userId = await AsyncStorage.getItem("id_pengguna");
+        
+        if(userId==null){
+          dispatch({type:'set_logged_in',payload:false});
+        }else{
+          const data: UserResponseInterface = (await axios.get(`${profileUrl}/${userId}`)).data;
+          dispatch({type:'set_user_data',payload:data.data});
+          dispatch({type:'set_logged_in',payload:true});
+        }
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // render app
+        dispatch({type:'set_loading',payload:false});
+        
+        await SplashScreen.hideAsync();
+      }
+    })();
+
+  },[]);
 
   return (
     <NavigationContainer>
-      <Root.Navigator
+      <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}>
         {state?.isLoggedIn ? (
-          <Root.Screen name="Home" component={TabNavigation} />
+          <Stack.Screen name="Home" component={TabNavigation} />
         ) : (
           AuthenticationScreens()
         )}
-      </Root.Navigator>
+        <Stack.Screen name="SearchScreen" component={SearchScreen} />
+        <Stack.Screen name="DetailActivityScreen" component={DetailActivityScreen} />
+        <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+        <Stack.Screen name="VolunteerHistory" component={VolunteerHistory} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
@@ -97,7 +146,7 @@ export default () => {
     <NativeBaseProvider theme={customTheme}>
       <AuthProvider>
         <App />
-        <StatusBar style="light" backgroundColor="#E07575" />
+        {/* <StatusBar style="light" backgroundColor="#E07575" /> */}
       </AuthProvider>
     </NativeBaseProvider>
   );

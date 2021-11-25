@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import axios from 'axios'
 import { Button, FormControl, Heading, HStack, Icon, Input, Text, useToast, VStack } from 'native-base'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { FormDataLoginInterface, UserDataInterface, UserResponseInterface } from '.'
+import { FormDataLoginInterface, UserResponseInterface } from '.'
 import { loginUrl } from '../../apis'
 import { WithTopNavigation } from '../../components/NavigationApp'
 import { loginValidate } from '../../constants'
@@ -45,8 +45,7 @@ const LoginScreen: FC = ({ navigation }: NativeStackNavigationProp) => {
       })
       dispatch({type: "set_loading", payload: false})
       dispatch({type: "set_user_data", payload: data.data})
-      const {id_pengguna,nama,role}:UserDataInterface = data.data;
-      storeStorageData('user_data', {id_pengguna,nama,role});
+      storeStorageData('id_pengguna', data.data.id_pengguna)
       
       // Ini akan otomatis pindah ke halaman selanjutnya
       // yakni halaman pertama di logika !isLoggedIn
@@ -56,7 +55,7 @@ const LoginScreen: FC = ({ navigation }: NativeStackNavigationProp) => {
         title: "Login Gagal",
         size: '0.5',
         status: "danger",
-        description: e.response.message,
+        description: e.response.data.message,
       })
       dispatch({type: "set_loading", payload: false})
     }
