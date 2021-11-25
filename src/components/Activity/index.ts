@@ -1,12 +1,14 @@
 import ActivityCard from "./ActivityCard";
 import CategoryBox from "./CategoryBox";
 import SearchBar from "./SearchBar";
+import SearchInput from "./SearchInput";
 
-export { ActivityCard, CategoryBox, SearchBar };
+export { ActivityCard, CategoryBox, SearchBar, SearchInput };
 
 interface CategoryDataInterface {
   id_jenis_acara: string;
   nama_jenis_acara: string;
+  icon: string;
 }
 
 interface ActivityDataInterface {

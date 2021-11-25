@@ -1,7 +1,7 @@
 export * from "./useFetch";
 
 interface ApiResponse {
-  items: any[] | any;
+  data: any[] | any;
   isLoading: boolean;
   error: boolean | string;
 }

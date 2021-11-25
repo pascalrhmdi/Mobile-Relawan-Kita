@@ -10,7 +10,7 @@ const WithTopNavigation: FC<Props> = (props) => {
   const navigation = useNavigation();
 
   if (props.safeArea) return (
-    <Box safeArea py="4" px="4" bgColor="rose.50">
+    <Box safeArea py="4" px="4" bgColor="rose.50" flex={1}>
       <HStack alignItems="center" mb="4">
         <Pressable  onPress={() => navigation.goBack()} p="0.5" pr="2"> 
           <ArrowBackIcon size="6" />

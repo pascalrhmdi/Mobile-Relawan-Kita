@@ -1,13 +1,13 @@
 import Constants from 'expo-constants';
+// https://cors-anywhere.herokuapp.com/
+const activityMainUrl: string = `https://cors-anywhere.herokuapp.com/${Constants.manifest?.extra?.apiBaseUrl}/api/activity`;
 
-const volunteerMainUrl: string = `${Constants.manifest?.extra?.apiBaseUrl}/api/activity`;
-
-const registerAnActivityUrl: string = `${volunteerMainUrl}/register`;
-const searchActivityUrl: string = `${volunteerMainUrl}/search`;
-const allActivityCategoryUrl : string = `${volunteerMainUrl}/category`;
+const registerAnActivityUrl: string = `${activityMainUrl}/register`;
+const searchActivityUrl: string = `${activityMainUrl}/search`;
+const allActivityCategoryUrl : string = `${activityMainUrl}/category`;
 
 export {
-  volunteerMainUrl,
+  activityMainUrl,
   searchActivityUrl,
   registerAnActivityUrl,
   allActivityCategoryUrl
