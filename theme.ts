@@ -29,6 +29,9 @@ const customTheme = extendTheme({
       baseStyle: {
         borderColor: "muted.400",
         p: "10px",
+        _disabled: {
+          bg: "muted.200"
+        }
       }
     },
     FormControlLabel: {

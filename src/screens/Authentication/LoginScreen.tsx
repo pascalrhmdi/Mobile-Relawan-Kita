@@ -11,7 +11,7 @@ import {
   useToast,
   VStack
 } from "native-base";
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import {
   FormDataLoginInterface,
   UserDataInterface,
@@ -36,11 +36,6 @@ const LoginScreen: FC = ({ navigation }) => {
   const [errors, setErrors] = useState({} as FormDataLoginInterface);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-
-  useEffect(() => {
-    dispatch({ type: "set_loading", payload: false });
-  }, []);
 
   function handlePasswordIcon(): void {
     setShowPassword((prevValue) => !prevValue);

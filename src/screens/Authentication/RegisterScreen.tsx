@@ -89,8 +89,8 @@ const RegisterScreen = ({ navigation }) => {
   }
   return (
     <DismissKeyboard>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <WithTopNavigation name="Register" bgColor="red.50">
+      <WithTopNavigation name="Register" bgColor="red.50">
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Heading color="red.600">
             Selamat Datang,
           </Heading>
@@ -198,7 +198,7 @@ const RegisterScreen = ({ navigation }) => {
               <TextArea
                 aria-label="alamat"
                 numberOfLines={4}
-                placeholder="Jl. Sesama"
+                value={formData.alamat}
                 textAlignVertical="top"
                 onChangeText={(value) => handleInputChange(value, 'alamat')}
               />
@@ -260,8 +260,8 @@ const RegisterScreen = ({ navigation }) => {
               </Button>
             </HStack>
           </VStack>
-        </WithTopNavigation>
-      </ScrollView>
+        </ScrollView>
+      </WithTopNavigation>
     </DismissKeyboard>
   )
 }

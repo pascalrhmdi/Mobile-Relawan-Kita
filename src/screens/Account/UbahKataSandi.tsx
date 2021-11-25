@@ -31,8 +31,9 @@ const UbahKataSandi: React.FC = ({ navigation }) => {
   const [formData, setFormData] = useState(initialState)
   const [errors, setErrors] = useState({} as FormDataUbahKataSandiInterface);
   const [showPassword, setShowPassword] = useState({} as showPasswordInterface)
+  const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
-  
+
   function handleInputChange(value: string, fieldName: string): void {
     setFormData({ ...formData, [fieldName]: value})
   }
@@ -43,7 +44,7 @@ const UbahKataSandi: React.FC = ({ navigation }) => {
   }
 
   async function ubahKataSandi(formData: FormDataUbahKataSandiInterface) {
-    dispatch({type: "set_loading", payload: true})
+    setIsLoading((prev) => !prev)
     try {
       const data: Omit<UserResponseInterface, "data">  = (await axios.put(ubahKataSandiUrl, JSON.stringify(formData))).data;
       
@@ -176,8 +177,8 @@ const UbahKataSandi: React.FC = ({ navigation }) => {
                 </FormControl.HelperText>
           }
         </FormControl>
-        <Button variant="RK_solidRed" mt={6} shadow={1} onPress={handleSubmit} isLoading={state.loading}>
-          Masuk
+        <Button variant="RK_solidRed" mt={6} shadow={1} onPress={handleSubmit} isLoading={isLoading}>
+          SIMPAN
         </Button>
       </WithTopNavigation>
     </DismissKeyboard>
