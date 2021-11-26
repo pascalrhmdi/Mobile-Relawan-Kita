@@ -1,12 +1,9 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Center, Heading, Image } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { LogoRK } from '../../../assets/images';
 
-type Props = NativeStackScreenProps<any, any>
-
-const ChooseLoginRegisterScreen = ({ navigation }: Props) => {
+const ChooseLoginRegisterScreen = ({ navigation }) => {
   return (
     <Center flex={1} bgColor="rose.100" px={1}>
       <Image

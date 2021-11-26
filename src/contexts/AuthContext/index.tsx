@@ -4,28 +4,27 @@ import { UserDataInterface } from "../../screens";
 interface AuthContextInterface extends UserDataInterface {
   // LoginAuth
   isLoggedIn: boolean,
-  // Loading
-  loading: boolean
 }
 
 const initialState: AuthContextInterface = {                         
   isLoggedIn: false,
-  loading: false,
   id_pengguna: "",
-  role: "",
+  email: "",
   nama: "",
-  jenis_kelamin: "",
+  role: "",
   alamat: "",
   nomor_telepon: "",
+  jenis_kelamin: "Laki-laki",
   tanggal_lahir: Date()
 };
 
 type Action =
     {type: 'set_loading'; payload: boolean }
+  | {type: 'set_logged_out' }
   | {type: 'set_logged_in'; payload: boolean }
   | {
       type:  'set_user_data';
-      payload: UserDataInterface;
+      payload: Partial<UserDataInterface>;
     }
 
 const authReducer = (state: AuthContextInterface, action: Action): AuthContextInterface => {
@@ -35,11 +34,8 @@ const authReducer = (state: AuthContextInterface, action: Action): AuthContextIn
 				...state,
 				isLoggedIn: action.payload,
 			};
-    case "set_loading":
-      return {
-        ...state,
-        loading: action.payload
-      };
+    case "set_logged_out":
+			return initialState;
     case 'set_user_data':
       return {
         ...state,

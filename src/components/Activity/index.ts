@@ -1,9 +1,10 @@
 import ActivityCard from "./ActivityCard";
+import ActivityHistoryCard from "./ActivityHistoryCard";
 import CategoryBox from "./CategoryBox";
 import SearchBar from "./SearchBar";
 import SearchInput from "./SearchInput";
 
-export { ActivityCard, CategoryBox, SearchBar, SearchInput };
+export { ActivityCard, CategoryBox, SearchBar, SearchInput, ActivityHistoryCard };
 
 interface CategoryDataInterface {
   id_jenis_acara: string;
@@ -24,4 +25,14 @@ interface ActivityDataInterface {
   total_pendaftar: string;
 }
 
-export { CategoryDataInterface, ActivityDataInterface };
+interface ActivityHistoryDataInterface {
+  cover: string;
+  id_acara: string;
+  judul_acara: string;
+  lokasi: string;
+  nama_org: string;
+  nama_jenis_acara: string;
+  status : string;
+}
+
+export { CategoryDataInterface, ActivityDataInterface, ActivityHistoryDataInterface };
