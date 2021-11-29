@@ -15,6 +15,13 @@ Relawan Kita cocok digunakan untuk relawan yang sedang mencari kegiatan kerelawa
   - [React Navigation](https://reactnavigation.org/)
 - [PHP](https://www.php.net/) 
 
+## Getting Started
+Ikuti langkah getting started di https://reactnative.dev/ bagian expo + install [Expo Go]
+1. Download Source Code
+2. Ketik `npm`, atau bila pakai yarn ketik `yarn`
+3. `npm start` atau `yarn start`
+4. Pilih platform untuk di run.
+
 ## Nama Kelompok
 > 1. **Muhammad Pascal Rahmadi** H1D019010 *as Leader, React Native Developer, UI/UX Desainer, and Database Administrator & Desainer*.
 > 2. **Ruly Adhika Makarim Hanif** H1D019050 *as React Native Developer, Backend Developer, and Database Administrator*.
