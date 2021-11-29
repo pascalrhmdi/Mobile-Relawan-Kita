@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import { ArrowBackIcon, HStack, Pressable, Divider, Box } from "native-base";
 import React, { FC } from "react";
-import { SearchInput } from "..";
+import { SearchInput }  from "../Activity";
 
 const TopNavigationSearchBar: FC = (props) => {
   const navigation = useNavigation();

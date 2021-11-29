@@ -29,6 +29,9 @@ const customTheme = extendTheme({
       baseStyle: {
         borderColor: "muted.400",
         p: "10px",
+        _disabled: {
+          bg: "muted.200"
+        }
       }
     },
     FormControlLabel: {
@@ -36,13 +39,17 @@ const customTheme = extendTheme({
         marginBottom: "6px",
         _text:{
           color: 'coolGray.800',
-          fontSize: 'xs',
+          fontSize: 'sm',
+          fontWeight: "bold"
         }
       }
     },
-    FormControlHelper: {
+    FormControlHelperText: {
       baseStyle: {
-        alignSelf: "flex-end"
+        alignSelf: "flex-end",
+        _text: {
+          fontSize: "xs"
+        }
       }
     },
     FormControlErrorMessage: {
@@ -51,8 +58,17 @@ const customTheme = extendTheme({
       }
     },
     Toast: {
+      baseStyle: {
+        p: "1.5",
+        _title: {
+          fontSize: "14"
+        },
+        _description: {
+          fontSize: "12"
+        },
+      },
       defaultProps: {
-        duration: 3000
+        duration: 2300
       }
     }
   },

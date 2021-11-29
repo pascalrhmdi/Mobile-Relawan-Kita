@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { RefreshControl } from "react-native";
 import { useFetchGet } from "../../Hooks";
 import { activityMainUrl } from "../../apis";
 import { ActivityCard } from "../../components";
-import { FlatList, Box } from "native-base";
+import { FlatList, Box, ScrollView } from "native-base";
 import { ErrorMessage, LoadingStateDisplay } from "../../components/General";
 
 export const ActivityScreen = ({ navigation }) => {
@@ -16,10 +17,29 @@ export const ActivityScreen = ({ navigation }) => {
     <Box flex={1} bgColor="light.50">
       {activityData.isLoading && <LoadingStateDisplay />}
       {!activityData.isLoading && activityData.error && (
-        <ErrorMessage
-          errorMsg={activityData.error}
-          additionalMsg="Swipe kebawah untuk refresh"
-        />
+        <ScrollView
+          px="3"
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing((prevState) => !prevState);
+
+                setTimeout(() => {
+                  if (!activityData.isLoading) {
+                    setRefreshing((prevState) => !prevState);
+                  }
+                }, 1000);
+              }}
+            />
+          }>
+          <ErrorMessage
+            errorMsg={activityData.error}
+            additionalMsg="Swipe kebawah untuk refresh"
+          />
+        </ScrollView>
       )}
       {!activityData.isLoading && !activityData.error && (
         <FlatList

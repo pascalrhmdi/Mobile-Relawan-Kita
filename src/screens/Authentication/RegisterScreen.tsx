@@ -1,13 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons'
-import RNDateTimePicker from '@react-native-community/datetimepicker'
 import axios from 'axios'
 import { Button, FormControl, Heading, HStack, Icon, Input, Radio, ScrollView, Text, TextArea, useToast, VStack } from 'native-base'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { FormDataRegisterInterface, UserResponseInterface } from '.'
 import { registerUrl } from '../../apis'
+import { InputDateApp } from '../../components/InputApp'
 import { WithTopNavigation } from '../../components/NavigationApp'
 import { storeStorageData } from '../../constants/asyncStorage.const'
-import { BulanLibFromDate } from '../../constants/bulanLib.const'
 import { daftarValidate } from '../../constants/formValidation.const'
 import { AuthContext } from '../../contexts/AuthContext'
 import { DismissKeyboard } from '../../HOCs'
@@ -29,11 +28,8 @@ const RegisterScreen = ({ navigation }) => {
   const [formData, setFormData] = useState(initialState)
   const [errors, setErrors] = useState({} as FormDataRegisterInterface);
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [showDate, setShowDate] = useState(false)
-
-  useEffect(() => {
-    dispatch({type: "set_loading", payload: false});
-  }, [])
 
   function handlePasswordIcon(): void {
     setShowPassword((prevValue) => !prevValue)
@@ -50,17 +46,18 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   async function daftar(formData: FormDataRegisterInterface) {
-    dispatch({type: "set_loading", payload: true})
+    setIsLoading((prev) => !prev)
     try {
       const data: UserResponseInterface  = (await axios.post(registerUrl, JSON.stringify(formData))).data;
+
+      dispatch({type: "set_user_data", payload: data.data})
+      storeStorageData('id_pengguna', data.data.id_pengguna)
       
       toast.show({
         title: data.message,
         status: "success",
       })
-      dispatch({type: "set_loading", payload: false})
-      dispatch({type: "set_user_data", payload: data.data})
-      storeStorageData('id_pengguna', data.data.id_pengguna)
+      
       // Ini akan otomatis pindah ke halaman selanjutnya
       // yakni halaman pertama di logika !isLoggedIn
       dispatch({type: "set_logged_in", payload: true})
@@ -71,7 +68,8 @@ const RegisterScreen = ({ navigation }) => {
         status: "danger",
         description: e.response.data.message,
       })
-      dispatch({type: "set_loading", payload: false})
+    } finally {
+      setIsLoading((prev) => !prev)
     }
   }
 
@@ -91,8 +89,8 @@ const RegisterScreen = ({ navigation }) => {
   }
   return (
     <DismissKeyboard>
-      <ScrollView alwaysBounceVertical showsVerticalScrollIndicator={false}>
-        <WithTopNavigation name="Register" safeArea>
+      <WithTopNavigation safeArea name="Register" bgColor="red.50">
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Heading color="red.600">
             Selamat Datang,
           </Heading>
@@ -118,14 +116,14 @@ const RegisterScreen = ({ navigation }) => {
                       {errors.email}
                     </FormControl.ErrorMessage>
                   : 
-                    <FormControl.HelperText alignSelf="flex-end">
+                    <FormControl.HelperText>
                       Email harus valid
                     </FormControl.HelperText>
               }
             </FormControl>
             <FormControl isRequired isInvalid={'password' in errors}>
               <FormControl.Label>
-                Password
+                Kata Sandi
               </FormControl.Label>
               <Input 
                 value={formData.password}
@@ -139,6 +137,7 @@ const RegisterScreen = ({ navigation }) => {
                     />
                   </Button>
                 }
+                onChangeText={(value) => handleInputChange(value, 'password')} 
               />
               {'password' in errors 
                   ?
@@ -146,7 +145,7 @@ const RegisterScreen = ({ navigation }) => {
                       {errors.password}
                     </FormControl.ErrorMessage>
                   : 
-                    <FormControl.HelperText alignSelf="flex-end">
+                    <FormControl.HelperText>
                       Password harus lebih dari 6 karakter
                     </FormControl.HelperText>
               }
@@ -166,7 +165,7 @@ const RegisterScreen = ({ navigation }) => {
                       {errors.nama}
                     </FormControl.ErrorMessage>
                   : 
-                    <FormControl.HelperText alignSelf="flex-end">
+                    <FormControl.HelperText>
                       Nama harus valid
                     </FormControl.HelperText>
               }
@@ -199,8 +198,9 @@ const RegisterScreen = ({ navigation }) => {
               <TextArea
                 aria-label="alamat"
                 numberOfLines={4}
-                placeholder="Jl. Sesama"
+                value={formData.alamat}
                 textAlignVertical="top"
+                onChangeText={(value) => handleInputChange(value, 'alamat')}
               />
               {'alamat' in errors &&
                   <FormControl.ErrorMessage>
@@ -225,53 +225,21 @@ const RegisterScreen = ({ navigation }) => {
                       {errors.nomor_telepon}
                     </FormControl.ErrorMessage>
                   : 
-                    <FormControl.HelperText alignSelf="flex-end">
+                    <FormControl.HelperText>
                       Nomor telepon harus valid
                     </FormControl.HelperText>
               }
             </FormControl>
-            <FormControl isRequired isInvalid={'tanggal_lahir' in errors}>
-              <FormControl.Label>
-                Tanggal Lahir
-              </FormControl.Label>
-              <Input 
-                showSoftInputOnFocus={false}
-                value={`${BulanLibFromDate(
-									formData.tanggal_lahir,
-									false
-								)}`} 
-                onPressIn={() => setShowDate(true)}
-                onChangeText={(value) => handleInputChange(value, 'tanggal_lahir')}
-                InputRightElement={
-                  <Icon
-                    as={<MaterialIcons name="today" />}
-                    onPress={() => setShowDate(true)}
-                    size={6}
-                    mr="2"
-                  />  
-                }/>
-              {'tanggal_lahir' in errors
-                  ?
-                    <FormControl.ErrorMessage>
-                      {errors.tanggal_lahir}
-                    </FormControl.ErrorMessage>
-                  : 
-                    <FormControl.HelperText alignSelf="flex-end">
-                      Sesuai KTP
-                    </FormControl.HelperText>
-              }
-            </FormControl>
-            {showDate && 
-              <RNDateTimePicker
-                testID="dateTimePicker"
-                value={new Date(formData.tanggal_lahir)}
-                // Maximun adalah Hari ini new Date()
-                maximumDate={new Date()}
-                minimumDate={new Date(1950, 0, 1)}
-                onChange={handleDateOnChange}
-              />
-            }
-            <Button variant="RK_solidRed" shadow={0} onPress={handleSubmit} isLoading={state.loading}>
+            <InputDateApp 
+              label="Tanggal Lahir"
+              inputValue={formData.tanggal_lahir}
+              onChangeText={(value) => handleInputChange(value, 'tanggal_lahir')}
+              onPress={() => setShowDate(true)}
+              showDate={showDate}
+              handleDateOnChange={handleDateOnChange}
+              helperText="Sesuai KTP"
+            />
+            <Button variant="RK_solidRed" shadow={0} onPress={handleSubmit} isLoading={isLoading}>
               Daftar
             </Button>
             <HStack mt="6" justifyContent="center">
@@ -292,8 +260,8 @@ const RegisterScreen = ({ navigation }) => {
               </Button>
             </HStack>
           </VStack>
-        </WithTopNavigation>
-      </ScrollView>
+        </ScrollView>
+      </WithTopNavigation>
     </DismissKeyboard>
   )
 }

@@ -16,11 +16,12 @@ interface FormDataRegisterInterface extends FormDataLoginInterface {
 
 interface UserDataInterface  {
   id_pengguna: string,
+  email: string,
   role: "" | "volunteer",
   nama: string,
   alamat: string,
   nomor_telepon: string,
-  jenis_kelamin: string,
+  jenis_kelamin: "Laki-laki" | "Perempuan",
   tanggal_lahir: string
 }
 
