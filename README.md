@@ -10,7 +10,7 @@
 
 ## Untuk siapa?
   Relawan Kita cocok digunakan untuk relawan yang sedang mencari kegiatan kerelawanan, juga untuk organisasi yang menginginkan acaranya tersebar keseluruh indonesia dengan fungsi yang lengkap termasuk penerimaan calon relawan sebagai relawan dalam acaranya.
-
+  
 ## Tech Stack
   Teknologi yang digunakan dalam membangun aplikasi ini adalah:
   - [Typescript](https://www.typescriptlang.org/) - _Bahasa pemrograman berbasis JavaScript yang menambahkan fitur strong-typing & konsep pemrograman OOP klasik (class, interface)._
@@ -25,8 +25,18 @@
       - [Image Picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/)
     - [Async Storage](https://react-native-async-storage.github.io/async-storage/docs/install/) - _Library untuk menyimpan data_
     - [Date Time Picker](https://github.com/react-native-datetimepicker/datetimepicker) - _Library untuk menampilkan sekaligus mengambil data tanggal dan waktu._
-  - [PHP](https://www.php.net/) - _Bahasa backend yang populer_
+  - [PHP](https://www.php.net/) - _Bahasa backend web yang populer_
   - [MySQL](https://www.mysql.com/) - _Relasional Database yang populer menggunakan bahasa SQL_
+
+## Tools
+  Berikut adalah tools yang kami gunakan untuk membangun aplikasi:
+  - Figma - Tools Untuk untuk mendesain tampilan
+  - Visual Studio Code - Code Editor
+  - Git - Version Control Systems
+  - GitHub - Layanan hos web bersama untuk proyek pengembangan perangkat lunak yang menggunakan sistem kendali versi Git dan layanan hosting internet.
+  - Thunder Client, Postman - Aplikasi yang berfungsi sebagai REST CLIENT untuk uji coba REST API.
+  - XAMPP - Alat pembangun server lokal yang membantu pengembangan proyek (Server Apache, Database MySQL, dan penerjemah bahasa PHP dan Perl)
+  - Scrcpy - "Screen Copy" alat untuk melihat layar handphone di layar komputer.
 
 ## Fitur Aplikasi
   1. Authentikasi Pengguna (Login dan Register)
