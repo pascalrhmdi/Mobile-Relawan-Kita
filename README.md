@@ -11,6 +11,9 @@
 ## Untuk siapa?
   Relawan Kita cocok digunakan untuk relawan yang sedang mencari kegiatan kerelawanan, juga untuk organisasi yang menginginkan acaranya tersebar keseluruh indonesia dengan fungsi yang lengkap termasuk penerimaan calon relawan sebagai relawan dalam acaranya.
   
+## Installation
+Aplikasi RelawanKita dapat didownload di [sini](https://drive.google.com/file/d/1poIqwi90dnh33aNUGaymAT6ROF3NnqSG/view?usp=sharing)
+  
 ## Tech Stack
   Teknologi yang digunakan dalam membangun aplikasi ini adalah:
   - [Typescript](https://www.typescriptlang.org/) - _Bahasa pemrograman berbasis JavaScript yang menambahkan fitur strong-typing & konsep pemrograman OOP klasik (class, interface)._
