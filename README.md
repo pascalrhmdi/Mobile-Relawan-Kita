@@ -93,8 +93,3 @@ Aplikasi RelawanKita dapat didownload di [sini](https://drive.google.com/file/d/
   2. Ketik `npm`, atau bila pakai yarn ketik `yarn`
   3. `npm start` atau `yarn start`
   4. Pilih platform untuk di run.
-
-## Nama Kelompok
-  > 1. **Muhammad Pascal Rahmadi** H1D019010 *as Leader, React Native Developer, UI/UX Desainer, and Database Administrator & Desainer*.
-  > 2. **Ruly Adhika Makarim Hanif** H1D019050 *as React Native Developer, Backend Developer, and Database Administrator*.
-  > 3. **Indah Cahya Febriani** H1D019054 *as UI/UX Desainer, and Team Secretary*.
